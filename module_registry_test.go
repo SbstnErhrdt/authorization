@@ -9,9 +9,10 @@ import (
 )
 
 type TestModule struct {
-	Name     string
-	Order    int
-	Policies [][]string
+	Name       string
+	Order      int
+	Policies   [][]string
+	SubModules []SubModule
 }
 
 func (tm *TestModule) GetName() string {
@@ -24,6 +25,16 @@ func (tm *TestModule) GetOrder() int {
 
 func (tm *TestModule) GetAllPolicies() ([][]string, error) {
 	return tm.Policies, nil
+}
+
+func (tm *TestModule) GetAllSubModules() (results []SubModule) {
+	return
+}
+
+type TestSubModule struct {
+	Name     string
+	Order    int
+	Policies [][]string
 }
 
 func TestRegister(t *testing.T) {

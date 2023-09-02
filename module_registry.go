@@ -1,6 +1,7 @@
 package authorization
 
 import (
+	"github.com/google/uuid"
 	"log/slog"
 	"sort"
 	"sync"
@@ -53,4 +54,23 @@ type Module interface {
 	GetName() string
 	GetOrder() int
 	GetAllPolicies() ([][]string, error)
+	GetAllSubModules() (results []SubModule)
+}
+
+// SubModule is the interface for authorization sub modules
+type SubModule interface {
+	GetName() string
+	GetOrder() int
+	GetAllPolicies() ([][]string, error)
+}
+
+type Function interface {
+	GetName() string
+	GetAction() string
+	GetPolicies() ([][]string, error)
+}
+
+type Resource interface {
+	GetUID() uuid.UUID
+	GetType() string
 }
