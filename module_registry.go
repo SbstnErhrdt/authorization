@@ -1,6 +1,7 @@
 package authorization
 
 import (
+	"fmt"
 	"github.com/google/uuid"
 	"log/slog"
 	"sort"
@@ -49,12 +50,37 @@ func GetAllModules() (results []Module) {
 	return
 }
 
+func PrintRegistry() {
+	for _, module := range GetAllModules() {
+		fmt.Println("module:", module.GetName())
+		for si, subModule := range module.GetAllSubModules() {
+			if si == 0 {
+				fmt.Println("sub modules:")
+			}
+			fmt.Println("\t", subModule.GetName())
+			for fi, function := range subModule.GetAllFunctions() {
+				if fi == 0 {
+					fmt.Println("\t\tfunctions:")
+				}
+				fmt.Println("\t\t\t", function.GetName())
+			}
+		}
+		for fi, function := range module.GetAllFunctions() {
+			if fi == 0 {
+				fmt.Println("\tfunctions:")
+			}
+			fmt.Println("\t\t", function.GetName())
+		}
+	}
+}
+
 // Module is the interface for authorization modules
 type Module interface {
 	GetName() string
 	GetOrder() int
 	GetAllPolicies() ([][]string, error)
 	GetAllSubModules() (results []SubModule)
+	GetAllFunctions() (results []Function)
 }
 
 // SubModule is the interface for authorization sub modules
@@ -62,12 +88,14 @@ type SubModule interface {
 	GetName() string
 	GetOrder() int
 	GetAllPolicies() ([][]string, error)
+	GetAllFunctions() (results []Function)
 }
 
 type Function interface {
 	GetName() string
+	GetDescription() string
 	GetAction() string
-	GetPolicies() ([][]string, error)
+	GetAllPolicies() ([][]string, error)
 }
 
 type Resource interface {

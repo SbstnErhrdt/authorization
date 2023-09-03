@@ -31,6 +31,10 @@ func (tm *TestModule) GetAllSubModules() (results []SubModule) {
 	return
 }
 
+func (tm *TestModule) GetAllFunctions() (results []Function) {
+	return
+}
+
 type TestSubModule struct {
 	Name     string
 	Order    int
