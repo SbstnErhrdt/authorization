@@ -3,7 +3,10 @@ module github.com/SbstnErhrdt/authorization
 go 1.21
 
 require (
+	github.com/SbstnErhrdt/gql_auto v0.0.0-20230828101046-abd9bb3fc4aa
 	github.com/casbin/casbin/v2 v2.77.1
+	github.com/google/uuid v1.3.0
+	github.com/graphql-go/graphql v0.8.1
 	github.com/stretchr/testify v1.8.4
 )
 

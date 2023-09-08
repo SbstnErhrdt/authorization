@@ -15,6 +15,11 @@ type TestModule struct {
 	SubModules []SubModule
 }
 
+func (tm *TestModule) GetActions() (results []string) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (tm *TestModule) GetName() string {
 	return tm.Name
 }

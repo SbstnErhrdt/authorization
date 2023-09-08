@@ -81,6 +81,7 @@ type Module interface {
 	GetAllPolicies() ([][]string, error)
 	GetAllSubModules() (results []SubModule)
 	GetAllFunctions() (results []Function)
+	GetActions() (results []string)
 }
 
 // SubModule is the interface for authorization sub modules

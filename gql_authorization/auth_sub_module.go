@@ -2,14 +2,22 @@ package gql_authorization
 
 import (
 	"github.com/SbstnErhrdt/authorization"
+	"github.com/SbstnErhrdt/gql_auto"
 	"github.com/graphql-go/graphql"
 	"log/slog"
+)
+
+// AppModuleGraphQlModel is a struct for the Module GraphQL model
+var AppSubModuleGraphQlModel, _ = gql_auto.DefaultEncoder.Struct(&AppSubModule{},
+	gql_auto.WithName("AuthorizationSubModule"),
+	gql_auto.WithDescription("Authorization sub module is a child of a module"),
 )
 
 type AppSubModule struct {
 	Name      string
 	Order     int
 	Policies  [][]string
+	Actions   map[string]string
 	Functions map[string]*AppFunction
 }
 
