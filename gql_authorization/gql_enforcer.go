@@ -2,6 +2,7 @@ package gql_authorization
 
 import (
 	"github.com/SbstnErhrdt/authorization"
+	"github.com/SbstnErhrdt/gql_auto"
 	"github.com/casbin/casbin/v2"
 	"github.com/graphql-go/graphql"
 )
@@ -107,7 +108,8 @@ var updatePolicyType = graphql.NewObject(
 // InitModuleQueries initializes the queries for the authorization module
 func InitModuleQueries(rootQueryObject *graphql.Object, enforcerGraphQLFieldName string, e *casbin.Enforcer) {
 	// enforce
-	rootQueryObject.AddFieldConfig(enforcerGraphQLFieldName, &graphql.Field{
+	enforcerQueryField := &graphql.Field{
+		Name: enforcerGraphQLFieldName,
 		Type: requestType,
 		Args: graphql.FieldConfigArgument{
 			"sub": &graphql.ArgumentConfig{
@@ -130,9 +132,10 @@ func InitModuleQueries(rootQueryObject *graphql.Object, enforcerGraphQLFieldName
 			}
 			return Request{sub, obj, act, res}, nil
 		},
-	})
+	}
 	// show all policies
-	rootQueryObject.AddFieldConfig(enforcerGraphQLFieldName+"Policies", &graphql.Field{
+	enforcerPoliciesQueryField := &graphql.Field{
+		Name:        enforcerGraphQLFieldName + "Policies",
 		Type:        graphql.NewList(policyType),
 		Description: "Get all policies",
 		Resolve: func(p graphql.ResolveParams) (interface{}, error) {
@@ -143,9 +146,10 @@ func InitModuleQueries(rootQueryObject *graphql.Object, enforcerGraphQLFieldName
 			}
 			return result, nil
 		},
-	})
+	}
 	// show all modules
-	rootQueryObject.AddFieldConfig(enforcerGraphQLFieldName+"Modules", &graphql.Field{
+	enforcerModulesQueryField := &graphql.Field{
+		Name:        enforcerGraphQLFieldName + "Modules",
 		Type:        graphql.NewList(graphql.String),
 		Description: "Get all modules",
 		Resolve: func(p graphql.ResolveParams) (interface{}, error) {
@@ -156,13 +160,18 @@ func InitModuleQueries(rootQueryObject *graphql.Object, enforcerGraphQLFieldName
 			}
 			return results, nil
 		},
-	})
+	}
+
+	gql_auto.AddField(rootQueryObject, enforcerQueryField)
+	gql_auto.AddField(rootQueryObject, enforcerPoliciesQueryField)
+	gql_auto.AddField(rootQueryObject, enforcerModulesQueryField)
 }
 
 // InitModuleMutations initializes the mutations for the authorization module
 func InitModuleMutations(rootMutationObject *graphql.Object, enforcerGraphQLFieldName string, e *casbin.Enforcer) {
-	rootMutationObject.AddFieldConfig(enforcerGraphQLFieldName+"AuthAddPolicy", &graphql.Field{
+	enforcerAddPolicyField := &graphql.Field{
 		Type:        requestType,
+		Name:        enforcerGraphQLFieldName + "AuthAddPolicy",
 		Description: "Add a policy",
 		Args: graphql.FieldConfigArgument{
 			"sub": &graphql.ArgumentConfig{
@@ -183,9 +192,10 @@ func InitModuleMutations(rootMutationObject *graphql.Object, enforcerGraphQLFiel
 			}
 			return Request{sub, obj, act, ok}, nil
 		},
-	})
-	rootMutationObject.AddFieldConfig(enforcerGraphQLFieldName+"AuthDeletePolicy", &graphql.Field{
+	}
+	enforcerDeletePolicyField := &graphql.Field{
 		Type:        requestType,
+		Name:        enforcerGraphQLFieldName + "AuthDeletePolicy",
 		Description: "Delete a policy",
 		Args: graphql.FieldConfigArgument{
 			"sub": &graphql.ArgumentConfig{
@@ -206,9 +216,10 @@ func InitModuleMutations(rootMutationObject *graphql.Object, enforcerGraphQLFiel
 			}
 			return Request{sub, obj, act, ok}, nil
 		},
-	})
-	rootMutationObject.AddFieldConfig(enforcerGraphQLFieldName+"AuthUpdatePolicy", &graphql.Field{
+	}
+	enforcerUpdatePolicyField := &graphql.Field{
 		Type:        updatePolicyType,
+		Name:        enforcerGraphQLFieldName + "AuthUpdatePolicy",
 		Description: "Update a policy",
 		Args: graphql.FieldConfigArgument{
 			"sub": &graphql.ArgumentConfig{
@@ -239,5 +250,10 @@ func InitModuleMutations(rootMutationObject *graphql.Object, enforcerGraphQLFiel
 			}
 			return UpdatePolicy{sub, obj, act, oldSub, oldObj, oldAct, res}, nil
 		},
-	})
+	}
+
+	gql_auto.AddField(rootMutationObject, enforcerAddPolicyField)
+	gql_auto.AddField(rootMutationObject, enforcerDeletePolicyField)
+	gql_auto.AddField(rootMutationObject, enforcerUpdatePolicyField)
+
 }
